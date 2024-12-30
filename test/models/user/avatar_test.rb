@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "test_helper"
 
 class User::AvatarTest < ActiveSupport::TestCase
@@ -48,6 +46,14 @@ class User::AvatarTest < ActiveSupport::TestCase
     assert_includes user.large_avatar_url, "/system/letter_avatars/h.png"
   end
 
+  test "non-image upload" do
+    file = fixture_file_upload("test.png", "text/html")
+    user = create(:user)
+    user.avatar = file
+    user.save
+    assert_equal "You are not allowed to upload text/html files, allowed types: image/*", user.errors.messages[:avatar]&.first
+  end
+
   test "upload and soft_delete" do
     file = fixture_file_upload("test.png")
     user = create(:user)
@@ -62,7 +68,7 @@ class User::AvatarTest < ActiveSupport::TestCase
     end
     user.reload
     assert_nil user[:avatar]
-    refute File.exist?(image_file_path), "#{image_file_path} still exist"
+    assert_not File.exist?(image_file_path), "#{image_file_path} still exist"
   end
 
   test "upload and destroy" do
@@ -77,6 +83,6 @@ class User::AvatarTest < ActiveSupport::TestCase
     perform_enqueued_jobs do
       user.destroy
     end
-    refute File.exist?(image_file_path), "#{image_file_path} still exist"
+    assert_not File.exist?(image_file_path), "#{image_file_path} still exist"
   end
 end

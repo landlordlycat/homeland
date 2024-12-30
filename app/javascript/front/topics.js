@@ -300,44 +300,28 @@ window.TopicView = Backbone.View.extend({
       return;
     }
 
-    if (!window.repliesChannel) {
-      return (window.repliesChannel = App.cable.subscriptions.create(
-        "RepliesChannel",
-        {
-          topicId: null,
-
-          connected() {
-            return this.subscribe();
-          },
-
-          received: (json) => {
-            if (json.user_id === App.current_user_id) {
-              return false;
-            }
-            if (json.action !== "create") {
-              return false;
-            }
-            if (App.windowInActive) {
-              return this.updateReplies();
-            } else {
-              return $(".notify-updated").show();
-            }
-          },
-
-          subscribe() {
-            this.topicId = Topics.topic_id;
-            return this.perform("follow", { topic_id: Topics.topic_id });
-          },
-
-          unfollow() {
-            return this.perform("unfollow");
-          },
-        }
-      ));
-    } else if (window.repliesChannel.topicId !== Topics.topic_id) {
-      window.repliesChannel.unfollow();
-      return window.repliesChannel.subscribe();
-    }
+    window.repliesChannel?.unsubscribe();
+    window.repliesChannel = App.cable.subscriptions.create(
+      {
+        channel: "RepliesChannel",
+        topic_id: Topics.topic_id,
+      },
+      {
+        received: (json) => {
+          if (json.user_id === App.current_user_id) {
+            return false;
+          }
+          if (json.action !== "create") {
+            return false;
+          }
+          if (App.windowInActive) {
+            return this.updateReplies();
+          } else {
+            return $(".notify-updated").show();
+          }
+        },
+      }
+    );
   },
 
   updateReplies() {

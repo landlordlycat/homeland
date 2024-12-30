@@ -86,12 +86,13 @@ hr {
     }
     .navbar-topic-title {
       display: none;
-      height: 50px;
+      height: 45px;
       text-align: left;
       overflow: hidden;
       top: 0;
       position: absolute;
-      background: var(--navbar-topic-title-background-color);
+      @apply bg-white;
+      @apply dark:bg-gray-900;
       display: none;
       min-width: 400px;
 
@@ -174,21 +175,7 @@ hr {
 }
 
 .node-header {
-  .container {
-    padding: 5px 20px;
-  }
-
-  &.node-header-with-node {
-    .container {
-      padding: 15px 20px;
-    }
-  }
-
   @media (max-width: 480px) {
-    .container {
-      padding: 5px 8px;
-    }
-
     .filter {
       .all-nodes {
         display: none;
@@ -369,12 +356,14 @@ hr {
     .count {
       width: 100px;
       text-align: right;
-      padding-top: 1.25rem;
+      padding-top: 1em;
       a:link,
       a:hover,
       a:visited {
         line-height: 11px;
         color: var(--secondary);
+        @apply dark:text-white dark:text-opacity-30;
+
         font-size: 13px;
         min-width: 32px;
         text-align: center;
@@ -386,21 +375,22 @@ hr {
 
       a:link {
         background: rgba(79, 147, 248, 0.24);
+        @apply dark:bg-blue-800 dark:bg-opacity-70;
       }
       a:hover {
         background: var(--gray);
+        @apply dark:bg-blue-800 dark:bg-opacity-100;
       }
       a.state-true,
       a:visited {
         background: var(--gray);
+        @apply dark:bg-gray-800;
       }
     }
   }
 }
 
 .topic-detail {
-  margin-bottom: 15px;
-
   .card-body {
     padding-top: 20px;
     padding-bottom: 20px;
@@ -485,10 +475,6 @@ hr {
       color: var(--primary);
       font-size: 14px;
     }
-    .team-name {
-      font-size: 14px;
-      color: $green;
-    }
     em {
       font-style: normal;
     }
@@ -496,20 +482,6 @@ hr {
 }
 
 #topic-sidebar {
-  position: fixed;
-  display: none;
-  width: 260px;
-
-  @media (min-width: 960px) {
-    display: block;
-    width: 224px;
-  }
-
-  @media (min-width: 1200px) {
-    display: block;
-    width: 272px;
-  }
-
   .group {
     text-align: center;
     margin-bottom: 20px;
@@ -562,7 +534,6 @@ hr {
 }
 
 #replies {
-  margin-bottom: 15px;
   .card-body {
     padding-bottom: 10px;
   }
@@ -801,10 +772,6 @@ hr {
 }
 
 .sidebar {
-  .card {
-    margin-bottom: 1.25rem;
-  }
-
   .card-body {
     word-break: break-all;
   }
@@ -845,7 +812,7 @@ hr {
 }
 
 footer {
-  margin-top: 10px;
+  margin-top: 30px;
   margin-bottom: 20px;
   color: #909090;
   a {
@@ -864,15 +831,19 @@ footer {
 
 .notify-updated {
   display: none;
-  padding: 4px 15px;
-  margin-bottom: 20px;
-  text-align: left;
-  background: var(--yellow-light);
-  border: 1px solid var(--yellow-light);
-  color: var(--red);
+  @apply border bg-blue-50 hover:bg-blue-100 border-blue-500 text-blue-700 dark:bg-blue-900 hover:dark:bg-blue-800 dark:border-blue-900 dark:text-gray-200 py-1 px-3 mb-5 rounded;
+
   a:link,
   a:visited {
-    color: var(--yellow);
+    @apply text-blue-700 dark:text-gray-200;
+  }
+
+  a {
+    @apply flex items-center;
+  }
+
+  .notify-badge {
+    @apply w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded mr-2;
   }
 }
 
@@ -1029,6 +1000,32 @@ textarea.div-dropzone-focus {
     }
     i.fa {
       color: #aaa;
+    }
+  }
+}
+
+.topic-references {
+  .nav {
+    @apply px-4 pt-2 space-x-4;
+
+    .nav-link {
+      @apply px-0 py-1 border-0 hover:underline underline-offset-4;
+
+      &.active {
+        @apply font-semibold text-gray-800 dark:text-gray-200;
+      }
+    }
+  }
+
+  .tab-content {
+    @apply py-2 divide-x divide-gray-400 max-h-[330px] overflow-y-scroll;
+
+    .ref-topic-item {
+      @apply py-1.5 px-4 block bg-transparent hover:bg-gray-100 underline-offset-2 text-gray-700 dark:hover:bg-gray-800 dark:text-gray-200;
+    }
+
+    .no-result {
+      @apply py-2 px-4 text-gray-300 dark:text-gray-600 text-center;
     }
   }
 }

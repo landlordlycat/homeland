@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Topic < ApplicationRecord
   include UserAvatarDelegate
   include Searchable
@@ -8,6 +6,7 @@ class Topic < ApplicationRecord
   include Mentionable
   include MarkdownBody
   include SoftDelete
+  include TopicReference
   include Topic::RateLimit
   include Topic::Notify
   include Topic::Search
@@ -15,6 +14,8 @@ class Topic < ApplicationRecord
   include Topic::Actions
 
   attr_accessor :read_state
+
+  action_store :reference, :topic
 
   belongs_to :user, inverse_of: :topics, counter_cache: true, required: false
   belongs_to :team, counter_cache: true, required: false

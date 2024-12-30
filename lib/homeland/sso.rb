@@ -1,13 +1,11 @@
-# frozen_string_literal: true
-
 module Homeland
   class SSO < SingleSignOn
     def self.sso_url
-      Setting.sso["url"]
+      Setting.sso[:url]
     end
 
     def self.sso_secret
-      Setting.sso["secret"]
+      Setting.sso[:secret]
     end
 
     def self.generate_sso(return_path = "/")
@@ -24,21 +22,21 @@ module Homeland
 
     def register_nonce(return_path)
       if nonce
-        Redis.current.setex(nonce_key, NONCE_EXPIRY_TIME, return_path)
+        Homeland.redis.setex(nonce_key, NONCE_EXPIRY_TIME, return_path)
       end
     end
 
     def nonce_valid?
-      nonce && Redis.current.get(nonce_key).present?
+      nonce && Homeland.redis.get(nonce_key).present?
     end
 
     def return_path
-      Redis.current.get(nonce_key) || "/"
+      Homeland.redis.get(nonce_key) || "/"
     end
 
     def expire_nonce!
       if nonce
-        Redis.current.del nonce_key
+        Homeland.redis.del nonce_key
       end
     end
 

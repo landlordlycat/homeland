@@ -1,22 +1,20 @@
-<div class="row">
+<div class="flex flex-col gap-4 sm:flex-row">
   <%= render 'menu' %>
-  <div class="col-md-10">
-    <div class="card card-lg">
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-8">
-            <%= form_for @user, url: setting_path, method: :put, html: { enctype: "multipart/form-data" } do |f| %>
-              <%= render "shared/error_messages", target: @user %>
+  <div class="p-4 grow card">
+    <div class="flex flex-col gap-4 sm:flex-row">
+      <div class="grow">
+        <%= form_for @user, url: setting_path, method: :put, html: { enctype: "multipart/form-data" } do |f| %>
+            <%= render "shared/error_messages", target: @user %>
               <input type="hidden" name="by" value="reward">
               <% User::REWARD_FIELDS.each do |field| %>
-                <div class="form-group form-group-reward-field-<%= field %>">
+                <div class="flex flex-col form-group-reward-field-<%= field %> mb-4">
                   <label class="form-label"><%= Profile.reward_field_label(field) %></label>
-                  <input class="form-control" type="file" name="user_reward[<%= field %>]" id="user_reward_<%= field %>">
+                  <input class="p-2 border rounded shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 dark:border dark:border-gray-800" type="file" name="user_reward[<%= field %>]" id="user_reward_<%= field %>">
                   <div class="form-text">
                     <% if field == :alipay %>
-                      打开支付宝客户端：右上角 “+” -> 我要收款 -> 设定金额 -> 保存二维码图片
+                      打开支付宝客户端：右上角“+” -> 我要收款 -> 设定金额 -> 保存二维码图片
                     <% elsif field == :wechat %>
-                      打开微信手机客户端：右上角 “+” -> 收付款 -> 我要收款 -> 保存二维码图片
+                      打开微信手机客户端：右上角“+” -> 收付款 -> 我要收款 -> 保存二维码图片
                     <% end %>
                   </div>
                 </div>
@@ -33,7 +31,7 @@
               </div>
             <% end %>
           </div>
-          <div class="col-md-4">
+          <div class="w-full sm:w-1/3 shrink-0">
             <div class="markdown">
               <%= markdown("### :gift: 关于打赏\n\n
 
@@ -43,8 +41,6 @@
               ") %>
             </div>
           </div>
-        </div>
-      </div>
     </div>
   </div>
 </div>

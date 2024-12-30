@@ -8,33 +8,32 @@
     <meta name="apple-mobile-web-app-capable" content="no">
     <meta content='True' name='HandheldFriendly'>
     <%= stylesheet_pack_tag "front" %>
-    <%= javascript_packs_with_chunks_tag "application" %>
+    <%= javascript_pack_tag "application", defer: false %>
     <%= csrf_meta_tag %>
     <%= raw Setting.custom_head_html %>
   </head>
   <body data-controller-name="<%= controller_name %>">
-    <%= javascript_pack_tag "bootstrap", 'data-turbolinks-eval': "false" %>
-    <div class="header">
-      <div class="header navbar navbar-expand flex-md-row bd-navbar">
-        <div class="container d-sm-flex flex-wrap">
-          <div class="navbar-header d-none d-md-flex" data-turbolinks-permanent>
+    <div class="flex items-stretch header navbar navbar-expand-md">
+      <div class="container relative z-50 flex flex-wrap items-center mx-auto md:flex-nowrap">
+        <div class="container flex flex-wrap mx-auto">
+          <div class="items-center hidden text-xl font-bold navbar-header sm:flex" data-turbolinks-permanent>
             <%= raw Setting.navbar_brand_html %>
           </div>
           <div class="navbar-nav-scroll">
             <%= render "shared/navbar" %>
           </div>
-          <div class="ml-auto d-md-flex">
+          <div class="flex ml-auto">
             <%= render "shared/usernav" %>
           </div>
         </div>
       </div>
     </div>
-    <div id="main" class="main-container container">
+    <div id="main" class="container mx-auto">
       <%= render AlertComponent.new %>
       <%= yield %>
     </div>
     <footer class="footer">
-      <div class="container">
+      <div class="container mx-auto">
         <%= raw Setting.footer_html %>
       </div>
     </footer>

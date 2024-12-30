@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "spec_helper"
 
 describe Auth::SSOController do
@@ -10,15 +8,15 @@ describe Auth::SSOController do
       @sso_url = "http://somesite.com/homeland-sso"
 
       Setting.stubs(:sso).returns(
-        "enable" => true,
-        "url" => @sso_url,
-        "secret" => sso_secret
+        enable: true,
+        url: @sso_url,
+        secret: sso_secret
       )
       Setting.stubs(:sso_enabled?).returns(true)
     end
 
     it "should work" do
-      get auth_sso_path, params: {return_path: "/topics/123"}
+      get auth_sso_path, params: { return_path: "/topics/123" }
       assert_equal 302, response.status
 
       # javascript code will handle redirection of user to return_sso_url
@@ -26,7 +24,7 @@ describe Auth::SSOController do
     end
 
     it "should work with destination_url" do
-      get auth_sso_path, headers: {Cookie: "destination_url=/topics/123"}
+      get auth_sso_path, headers: { Cookie: "destination_url=/topics/123" }
       assert_equal 302, response.status
 
       # javascript code will handle redirection of user to return_sso_url
@@ -45,9 +43,9 @@ describe Auth::SSOController do
       }
 
       Setting.stubs(:sso).returns(
-        "enable" => true,
-        "url" => @sso_url,
-        "secret" => sso_secret
+        enable: true,
+        url: @sso_url,
+        secret: sso_secret
       )
       Setting.stubs(:sso_enabled?).returns(true)
     end
@@ -84,14 +82,14 @@ describe Auth::SSOController do
       assert_equal sso.username, user.login
       assert_equal sso.name, user.name
       assert_equal sso.bio, user.bio
-      refute_equal nil, user.sso
+      assert_not_equal nil, user.sso
       assert_equal sso.external_id, user.sso.uid
       assert_equal sso.username, user.sso.username
       assert_equal sso.name, user.sso.name
       assert_equal sso.email, user.sso.email
       assert_equal sso.avatar_url, user.sso.avatar_url
       assert_equal mock_ip, user.current_sign_in_ip
-      refute_equal nil, user.current_sign_in_at
+      assert_not_equal nil, user.current_sign_in_at
     end
 
     it "can sign a exist user" do
@@ -163,7 +161,7 @@ describe Auth::SSOController do
       sso.avatar_url = "http://foobar.com/avatar/1.jpg"
       sso.admin = false
 
-      Redis.current.del("SSO_NONCE_#{sso.nonce}")
+      Homeland.redis.del("SSO_NONCE_#{sso.nonce}")
       get login_auth_sso_path, params: Rack::Utils.parse_query(sso.payload), headers: @headers
       assert_equal 419, response.status
     end
@@ -174,7 +172,7 @@ describe Auth::SSOController do
 
     before do
       Setting.stubs(:sso).returns(
-        "secret" => sso_secret
+        secret: sso_secret
       )
       Setting.stubs(:sso_provider_enabled?).returns(true)
 

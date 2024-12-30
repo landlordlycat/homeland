@@ -1,10 +1,8 @@
-# frozen_string_literal: true
-
 require "test_helper"
 
 class CounterableTest < ActiveSupport::TestCase
   test "Topic hits" do
-    Redis.current.del("topic:123:hits")
+    Homeland.redis.del("topic:123:hits")
     t = Topic.new(id: 123)
 
     # Ensure Redis DB is 0

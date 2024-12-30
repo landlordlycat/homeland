@@ -1,11 +1,9 @@
-# frozen_string_literal: true
-
 class TeamsController < ApplicationController
   require_module_enabled! :team
   load_resource find_by: :login
   load_and_authorize_resource
 
-  before_action :set_team, only: %i[show edit update destroy]
+  before_action :set_team, only: %i[show edit update]
 
   def index
     @total_team_count = Team.count
@@ -24,7 +22,7 @@ class TeamsController < ApplicationController
     @team = Team.new(team_params)
     @team.owner_id = current_user.id
     if @team.save
-      redirect_to(edit_team_path(@team), notice: "创建成功")
+      redirect_to(edit_team_path(@team), notice: t("common.create_success"))
     else
       render action: "new"
     end

@@ -1,8 +1,6 @@
-# frozen_string_literal: true
-
 module Admin
   class LocationsController < Admin::ApplicationController
-    before_action :set_location, only: %i[show edit update destroy]
+    before_action :set_location, only: %i[edit update]
 
     def index
       @locations = Location.hot.page(params[:page])
@@ -13,7 +11,7 @@ module Admin
 
     def update
       if @location.update(params[:location].permit!)
-        redirect_to(admin_locations_path, notice: "Location was update successfully.")
+        redirect_to(admin_locations_path, notice: t("views.admin.location_was_update_successfully"))
       else
         render action: "edit"
       end

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "sidekiq/web"
 require "sidekiq/cron/web"
 
@@ -15,9 +13,10 @@ Rails.application.routes.draw do
 
   root to: "topics#index"
   match "/uploads/:path(![large|lg|md|sm|xs])", to: "home#uploads", via: :get, constraints: {
-    path: /[\w\d.\/\-]+/i
+    path: /[\w\d.\/-]+/i
   }
   get "status", to: "home#status"
+  get "manifest.webmanifest", to: "home#manifest"
 
   devise_for :users, path: "account", controllers: {
     registrations: "users/registrations",
@@ -55,7 +54,7 @@ Rails.application.routes.draw do
   end
 
   get "topics/node:id", to: "topics#node", as: "node_topics"
-  get "topics/node:id/feed", to: "topics#node_feed", as: "feed_node_topics", defaults: {format: "xml"}
+  get "topics/node:id/feed", to: "topics#node_feed", as: "feed_node_topics", defaults: { format: "xml" }
 
   resources :topics do
     member do
@@ -77,7 +76,7 @@ Rails.application.routes.draw do
       get :banned
       get :excellent
       get :favorites
-      get :feed, defaults: {format: "xml"}
+      get :feed, defaults: { format: "xml" }
       post :preview
     end
 
@@ -115,7 +114,7 @@ Rails.application.routes.draw do
       end
     end
     resources :nodes
-    resources :users, constraints: {id: /[#{User::LOGIN_FORMAT}]*/o} do
+    resources :users, constraints: { id: /[#{User::LOGIN_FORMAT}]*/o } do
       member do
         delete :clean
       end

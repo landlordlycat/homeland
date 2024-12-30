@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # ApplicationController
 class ApplicationController < ActionController::Base
   include Localize
@@ -27,7 +25,9 @@ class ApplicationController < ActionController::Base
   end
 
   before_action do
-    cookies.signed[:user_id] ||= current_user.try(:id)
+    # always set user_id into cookie, to make sure ActionCable connection is current user.
+    cookies.signed[:user_id] = current_user.try(:id)
+    current_user&.touch_last_online_ts
 
     # hit unread_notify_count
     unread_notify_count
@@ -36,10 +36,10 @@ class ApplicationController < ActionController::Base
   before_action :set_active_menu
   def set_active_menu
     @current = case controller_name
-               when "pages"
-                 ["/wiki"]
-               else
-                 ["/#{controller_name}"]
+    when "pages"
+      ["/wiki"]
+    else
+      ["/#{controller_name}"]
     end
   end
 

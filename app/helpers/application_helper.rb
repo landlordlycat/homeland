@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module ApplicationHelper
   def markdown(text)
     return nil if text.blank?
@@ -66,7 +64,7 @@ module ApplicationHelper
     Setting.editor_languages.each do |lang|
       lexer = Rouge::Lexer.find(lang)
       if lexer
-        dropdown_items << link_to(lexer.title, "#", class: "dropdown-item", data: {lang: lang})
+        dropdown_items << link_to(lexer.title, "#", class: "dropdown-item", data: { lang: lang })
       end
     end
     raw dropdown_items.join("")
@@ -106,7 +104,7 @@ module ApplicationHelper
     items = []
     list.each do |link|
       urls = link.match(/href=(["'])(.*?)(\1)/) || []
-      url = urls.length > 2 ? urls[2] : nil
+      url = (urls.length > 2) ? urls[2] : nil
       if url && current_page?(url) || @current&.include?(url)
         link = link.gsub("nav-link", "nav-link active")
       end

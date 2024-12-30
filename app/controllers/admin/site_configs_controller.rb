@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Admin
   class SiteConfigsController < Admin::ApplicationController
     before_action :set_setting, only: %i[edit update]
@@ -26,7 +24,7 @@ module Admin
           Setting.require_restart = true
         end
 
-        redirect_to admin_site_configs_path(scope: @scope), notice: "Update successfully."
+        redirect_to admin_site_configs_path(scope: @scope), notice: t("views.admin.update_successfully")
       else
         render "edit"
       end

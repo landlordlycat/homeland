@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class UsersController < ApplicationController
   before_action :set_user, except: %i[index city]
   before_action :check_exist!, except: %i[index city block unblock
@@ -13,11 +11,19 @@ class UsersController < ApplicationController
 
   def index
     @total_user_count = User.count
-    @active_users = User.without_team.fields_for_list.hot.limit(100)
+
+    @counters = Counter.where(countable_type: "User")
+    @counters = if params[:type] == "monthly"
+      @counters.where(key: :monthly_replies_count)
+    else
+      @counters.where(key: :yearly_replies_count)
+    end
+
+    @active_users = @counters.includes(:countable).order("value desc").limit(100).map(&:countable)
   end
 
   def feed
-    @topics = @user.topics.recent.limit(20)
+    @topics = @user.topics.includes(:node).recent.limit(20)
   end
 
   def city
@@ -30,7 +36,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user_type == :team ? team_show : user_show
+    (@user_type == :team) ? team_show : user_show
   end
 
   protected

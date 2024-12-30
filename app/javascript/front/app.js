@@ -10,8 +10,6 @@ const AppView = Backbone.View.extend({
 
   events: {
     "click a.likeable": "likeable",
-    "click .header .form-search .btn-search": "openHeaderSearchBox",
-    "click .header .form-search .btn-close": "closeHeaderSearchBox",
     "click a.button-block-user": "blockUser",
     "click a.button-follow-user": "followUser",
     "click a.button-block-node": "blockNode",
@@ -171,7 +169,7 @@ const AppView = Backbone.View.extend({
   },
 
   initCable() {
-    if (!window.notificationChannel && App.isLogined()) {
+    if (!window.notificationChannel && App.isLogined() && App.cable) {
       return (window.notificationChannel = App.cable.subscriptions.create(
         "NotificationsChannel",
         {
@@ -184,6 +182,7 @@ const AppView = Backbone.View.extend({
           },
 
           subscribe() {
+            console.log("NotificationsChannel.subscibe");
             return this.perform("subscribed");
           },
         }
@@ -220,18 +219,6 @@ const AppView = Backbone.View.extend({
       const q = results && decodeURIComponent(results[1]);
       return $searchInput.val(q);
     }
-  },
-
-  openHeaderSearchBox(e) {
-    $(".header .form-search").addClass("active");
-    $(".header .form-search input").focus();
-    return false;
-  },
-
-  closeHeaderSearchBox(e) {
-    $(".header .form-search input").val("");
-    $(".header .form-search").removeClass("active");
-    return false;
   },
 
   followUser(e) {
@@ -342,8 +329,7 @@ const AppView = Backbone.View.extend({
         finishedMsg: '<div style="text-align: center; padding: 5px;">EOF</div>',
         msgText:
           '<div style="text-align: center; padding: 5px;">Loading...</div>',
-        img:
-          "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==",
+        img: "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==",
       },
     });
   },
@@ -409,6 +395,16 @@ mediaDark.addEventListener("change", () => {
 document.addEventListener("turbolinks:load", () => {
   window._appView = new AppView();
   switchTheme();
+
+  let navbar_toggle = document.getElementById("navbar-toggler");
+  if (navbar_toggle) {
+    navbar_toggle.addEventListener("click", (event) => {
+      let navmenu = document.getElementById("main-navbar");
+      if (navmenu) {
+        navmenu.classList.toggle("main-navbar-open");
+      }
+    });
+  }
 });
 
 document.addEventListener("turbolinks:click", (event) => {

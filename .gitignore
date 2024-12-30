@@ -6,6 +6,7 @@ db/*.sqlite3
 tmp/
 log/*.log
 log/*.log*
+*.log
 tmp/**/*
 .sass-cache/
 .yardoc/
@@ -33,6 +34,7 @@ config/nginx/nginx.conf
 *.sublime-workspace
 .rvmrc
 vendor/ruby
+vendor/bundle
 .idea/
 spec/examples.txt
 .vagrant
@@ -43,6 +45,14 @@ spec/examples.txt
 !/plugins/test/
 app.local.env
 *.tmp
+/node_modules
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity
+.env.local
+
+/public/packs
+/public/packs-test
 /node_modules
 /yarn-error.log
 yarn-debug.log*

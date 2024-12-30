@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # RailsSettings Model
 class Setting < RailsSettings::Base
   LEGECY_ENVS = {
@@ -79,10 +77,11 @@ class Setting < RailsSettings::Base
     mailer_provider
     mailer_sender
     mailer_options
+    mainfest
   ]
 
   scope :basic do
-    field :app_name, default: (ENV["app_name"] || "Homeland"), validates: {presence: true}
+    field :app_name, default: (ENV["app_name"] || "Homeland"), validates: { presence: true }
     field :timezone, default: "UTC"
     # Module [topic,team,github,editor.code]
     field :modules, default: (ENV["modules"] || "all"), type: :array
@@ -95,11 +94,27 @@ class Setting < RailsSettings::Base
     field :share_allow_sites, default: %w[twitter weibo facebook wechat], type: :array, separator: /\s+/
     field :editor_languages, default: %w[rb go js py java rs php css html yml json xml], type: :array, separator: /[\s,]+/
     field :google_analytics_key, default: ""
+    field :manifest, type: :hash, default: {
+      name: "Homeland",
+      short_name: "Homeland",
+      description: "Open source discussion website.",
+      start_url: "/",
+      display: "standalone",
+      background_color: "#FFFFFF",
+      theme_color: "#FFFFFF",
+      icons: [
+        {
+          src: "https://l.ruby-china.com/photo/2018/bd93b12d-98d0-47a4-9f7a-128b8a3271f7.png",
+          sizes: "512x512",
+          type: "image/png"
+        }
+      ]
+    }
   end
 
   scope :appearance do
     field :navbar_brand_html, default: -> { %(<a href="/" class="navbar-brand"><b>#{app_name}</b></a>) }
-    field :default_locale, default: "en", validates: {presence: true, inclusion: {in: %w[en zh-CN]}}
+    field :default_locale, default: "en", validates: { presence: true, inclusion: { in: %w[en zh-CN] } }
     field :auto_locale, default: "false", type: :boolean
     field :custom_head_html, default: ""
     field :navbar_html, default: ""
@@ -243,11 +258,11 @@ class Setting < RailsSettings::Base
 
     def sso_enabled?
       return false if sso_provider_enabled?
-      sso[:enable] == true
+      sso[:enable] == "true"
     end
 
     def sso_provider_enabled?
-      sso[:enable_provider] == true
+      sso[:enable_provider] == "true"
     end
 
     def rails_initialized?

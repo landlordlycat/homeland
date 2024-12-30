@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "test_helper"
 
 class UsersTest < ActionDispatch::IntegrationTest
@@ -8,6 +6,14 @@ class UsersTest < ActionDispatch::IntegrationTest
       create(:user, login: login)
       get "/#{login}"
       assert_equal 200, response.status
+    end
+  end
+
+  test "should get user list" do
+    %w[foo foo1 1234 foo-bar foo_bar foo_ foo.bar].each do |login|
+      create(:user, login: login)
+      get "/users"
+      assert_response :success
     end
   end
 end

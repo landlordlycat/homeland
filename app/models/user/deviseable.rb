@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class User
   # Omniauth
   module Deviseable
@@ -98,7 +96,7 @@ class User
           end
 
           Rails.logger.warn("User.create_from_hash error: #{user.errors.inspect}")
-          return nil
+          nil
         end
       end
     end

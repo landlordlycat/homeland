@@ -1,9 +1,7 @@
-# frozen_string_literal: true
-
 port 7000
 environment ENV.fetch("RAILS_ENV", "production")
 workers(ENV["workers"] || 4)
-threads (ENV["min_threads"] || 8), (ENV["max_threads"] || 8)
+threads 3, 3
 preload_app!
 
 on_worker_boot do
@@ -12,8 +10,11 @@ on_worker_boot do
   end
 end
 
+# Run the Solid Queue supervisor inside of Puma for single-server deployments
+plugin :solid_queue if ENV["SOLID_QUEUE_IN_PUMA"]
+
 before_fork do
-  max_memory = ((ENV["workers"] || 4).to_i + 1) * 380
+  max_memory = ((ENV["workers"] || 4).to_i + 1) * 450
   puts "=> Max Memory limit: #{max_memory}MB"
   PumaWorkerKiller.config do |config|
     config.ram = max_memory # mb

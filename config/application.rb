@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require_relative "boot"
 
 require "rails/all"
@@ -8,17 +6,17 @@ require "rails/all"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-Dotenv::Railtie.load
+Dotenv::Rails.load
 
 module Homeland
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.1
+    config.load_defaults 8.0
 
-    # Settings in config/environments/* take precedence over those specified here.
-    # Application configuration can go into files in config/initializers
-    # -- all .rb files in that directory are automatically loaded after loading
-    # the framework and any gems in your application.
+    # Please, add to the `ignore` list any other `lib` subdirectories that do
+    # not contain `.rb` files, or that should not be reloaded or eager loaded.
+    # Common ones are `templates`, `generators`, or `middleware`, for example.
+    config.autoload_lib(ignore: %w[assets tasks])
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     config.i18n.load_path += Dir[Rails.root.join("plugins", "*/locales", "*.{rb,yml}").to_s]
@@ -36,6 +34,9 @@ module Homeland
 
     config.to_prepare do
       Devise::Mailer.layout "mailer"
+    end
+
+    config.after_initialize do
       Doorkeeper::ApplicationController.include Homeland::UserNotificationHelper
       # Only Applications list
       Doorkeeper::ApplicationsController.layout "simple"
@@ -46,15 +47,18 @@ module Homeland
     end
 
     redis_config = Application.config_for(:redis)
-    config.cache_store = [:redis_cache_store, {namespace: "cache", url: redis_config["url"], expires_in: 4.weeks}]
+    config.cache_store = [:redis_cache_store, { namespace: "cache", url: redis_config["url"], expires_in: 4.weeks }]
 
     config.active_job.queue_adapter = :sidekiq
     config.middleware.use Rack::Attack
 
-    config.action_cable.mount_path = "/cable"
-    config.action_cable.logger = Logger.new("/dev/null")
+    config.active_record.async_query_executor = :multi_thread_pool
+
+    config.action_cable.mount_path = ENV["ACTIONCABLE_DISABLE"].present? ? "/_cable" : "/cable"
   end
 end
 
-# Homeland boot must keep in here
-require "homeland"
+unless ENV["RAILS_PRECOMPILE"].present?
+  # Homeland boot must keep in here
+  require "homeland"
+end

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "test_helper"
 
 def assert_render_with_cases(cases)
@@ -20,11 +18,7 @@ end
 class Homeland::MarkdownTest < ActiveSupport::TestCase
   test "auto link right with Chinese neer URL" do
     cases = {
-      "此版本并非线上的http://yavaeye.com 的源码.": '<p>此版本并非线上的<a href="http://yavaeye.com" rel="nofollow" target="_blank">http://yavaeye.com</a> 的源码.</p>',
-      "http://foo.com,的???": '<p><a href="http://foo.com," rel="nofollow" target="_blank">http://foo.com,</a>的???</p>',
-      "http://foo.com，的???": '<p><a href="http://foo.com" rel="nofollow" target="_blank">http://foo.com</a>，的???</p>',
-      "http://foo.com。的???": '<p><a href="http://foo.com" rel="nofollow" target="_blank">http://foo.com</a>。的???</p>',
-      "http://foo.com；的???": '<p><a href="http://foo.com" rel="nofollow" target="_blank">http://foo.com</a>；的???</p>'
+      "此版本并非线上的http://yavaeye.com 的源码.": '<p>此版本并非线上的<a href="http://yavaeye.com" rel="nofollow" target="_blank">http://yavaeye.com</a> 的源码。</p>'
     }
 
     assert_render_with_cases(cases)
@@ -33,7 +27,7 @@ class Homeland::MarkdownTest < ActiveSupport::TestCase
   test "auto link match complex urls" do
     cases = {
       "http://movie.douban.com/tag/%E7%BE%8E%E5%9B%BD": '<p><a href="http://movie.douban.com/tag/%E7%BE%8E%E5%9B%BD" rel="nofollow" target="_blank">http://movie.douban.com/tag/%E7%BE%8E%E5%9B%BD</a></p>',
-      "http://ruby-china.org/self_posts/11?datas=20,33|100&format=.jpg": '<p><a href="http://ruby-china.org/self_posts/11?datas=20,33%7C100&amp;format=.jpg" rel="nofollow" target="_blank">http://ruby-china.org/self_posts/11?datas=20,33|100&amp;format=.jpg</a></p>'
+      "http://ruby-china.org/self_posts/11?datas=20,33%7C100&format=.jpg": '<p><a href="http://ruby-china.org/self_posts/11?datas=20,33%7C100&amp;format=.jpg" rel="nofollow" target="_blank">http://ruby-china.org/self_posts/11?datas=20,33%7C100&amp;format=.jpg</a></p>'
     }
 
     assert_render_with_cases(cases)

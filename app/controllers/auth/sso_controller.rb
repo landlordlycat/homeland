@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Auth
   class SSOController < ApplicationController
     def show
@@ -15,7 +13,7 @@ module Auth
 
       sso = Homeland::SSO.generate_sso(return_path)
       Rails.logger.warn("Verbose SSO log: Started SSO process\n\n#{sso.diagnostics}")
-      redirect_to sso.to_url
+      redirect_to sso.to_url, allow_other_host: true
     end
 
     def login
@@ -65,7 +63,7 @@ module Auth
         return
       end
 
-      sso = SingleSignOn.parse(payload, Setting.sso["secret"])
+      sso = SingleSignOn.parse(payload, Setting.sso[:secret])
       sso.name = current_user.name
       sso.username = current_user.login
       sso.email = current_user.email
@@ -74,7 +72,7 @@ module Auth
       sso.admin = current_user.admin?
       sso.avatar_url = current_user.avatar.url(:lg)
 
-      redirect_to sso.to_url(sso.return_sso_url)
+      redirect_to sso.to_url(sso.return_sso_url), allow_other_host: true
     end
   end
 end

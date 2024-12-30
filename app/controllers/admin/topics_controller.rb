@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Admin
   class TopicsController < Admin::ApplicationController
     before_action :set_topic, only: %i[show edit update destroy revert suggest unsuggest]
@@ -33,7 +31,7 @@ module Admin
       @topic = Topic.new(params[:topic].permit!)
 
       if @topic.save
-        redirect_to(admin_topics_path, notice: "话题创建成功")
+        redirect_to(admin_topics_path, notice: t("views.admin.topic_created_successfully"))
       else
         render action: "new"
       end
@@ -41,7 +39,7 @@ module Admin
 
     def update
       if @topic.update(params[:topic].permit!)
-        redirect_to(admin_topics_path, notice: "话题更新成功")
+        redirect_to(admin_topics_path, notice: t("views.admin.topic_updated_successfully"))
       else
         render action: "edit"
       end

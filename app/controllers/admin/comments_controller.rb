@@ -1,8 +1,6 @@
-# frozen_string_literal: true
-
 module Admin
   class CommentsController < Admin::ApplicationController
-    before_action :set_comment, only: %i[show edit update destroy]
+    before_action :set_comment, only: %i[edit update destroy]
     respond_to :js, :html, only: [:destroy]
 
     def index
@@ -14,7 +12,7 @@ module Admin
 
     def update
       if @comment.update(params[:comment].permit!)
-        redirect_to admin_comments_path(@admin_comment), notice: "Comment was successfully updated."
+        redirect_to admin_comments_path(@admin_comment), notice: t("views.admin.comment_was_successfully_updated")
       else
         render action: "edit"
       end

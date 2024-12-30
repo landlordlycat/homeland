@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class BaseUploader < CarrierWave::Uploader::Base
   THUMB_IMAGE_EXTS = %w[.jpg .jpeg .gif .png]
 
@@ -24,6 +22,10 @@ class BaseUploader < CarrierWave::Uploader::Base
 
   def extension_allowlist
     %w[jpg jpeg gif png]
+  end
+
+  def content_type_allowlist
+    /image\//
   end
 
   def allow_thumb?(url)

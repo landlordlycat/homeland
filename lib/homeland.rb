@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "homeland/version"
 require "homeland/plugin"
 
@@ -12,6 +10,15 @@ module Homeland
   cattr_reader :boot_at
 
   class << self
+    # Follow Redis offical guides make redis thread safety
+    # https://github.com/redis/redis-rb#connection-pooling-and-thread-safety
+    def redis
+      @redis ||= ConnectionPool::Wrapper.new do
+        config = Rails.application.config_for(:redis)
+        Redis.new(url: config["url"], db: 0)
+      end
+    end
+
     def file_store
       @file_store ||= ActiveSupport::Cache::FileStore.new(Rails.root.join("tmp/cache"))
     end
@@ -51,7 +58,7 @@ module Homeland
     #     plugin.root_path = "/test"
     #   end
     #
-    # More example see: https://github.com/ruby-china/homeland-press
+    # More example see: https://github.com/homeland-plugins/press
     #
     def register_plugin
       @plugins ||= []

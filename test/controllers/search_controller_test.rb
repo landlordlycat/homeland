@@ -1,8 +1,13 @@
-# frozen_string_literal: true
-
 require "spec_helper"
 
 describe SearchController do
+  describe "GET /search" do
+    it "should work" do
+      get search_path
+      assert_equal 200, response.status
+    end
+  end
+
   describe "GET /search/users" do
     let(:user) { create(:user) }
     let(:users) { [create(:user), create(:user)] }

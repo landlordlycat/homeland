@@ -1,9 +1,4 @@
-# frozen_string_literal: true
-
 class HomeController < ApplicationController
-  def index
-  end
-
   def uploads
     return render_404 if Rails.env.production?
 
@@ -30,5 +25,9 @@ class HomeController < ApplicationController
 
   def status
     render plain: "OK #{Time.now.iso8601}"
+  end
+
+  def manifest
+    render json: Setting.manifest.to_json
   end
 end

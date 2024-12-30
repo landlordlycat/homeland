@@ -23,54 +23,57 @@
     <meta name="apple-mobile-web-app-capable" content="no">
     <meta content='True' name='HandheldFriendly'>
     <link rel="alternate" type="application/rss+xml" title="Subscribe" href="<%= main_app.feed_topics_url %>">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#171717">
+    <link rel="manifest" href="/manifest.webmanifest">
     <%= stylesheet_pack_tag "front", "data-turbolinks-track": "reload" %>
     <%= stylesheet_pack_tag "turbolinks-app", 'data-turbolinks-track': 'reload' if turbolinks_app? %>
     <%= yield :stylesheets %>
+    <%= javascript_pack_tag "application",  defer: false %>
+    <%= yield :javascripts %>
     <%= action_cable_meta_tag %>
     <%= csrf_meta_tag %>
     <%= raw Setting.custom_head_html %>
     <meta name="twitter:card" content="summary">
     <meta property="twitter:title" content="<%= @content_title || Setting.app_name %>">
+    <meta name="generator" content="Homeland <%= Homeland.version %>" />
     <% if @content_description %>
       <meta property="twitter:description" content="<%= @content_description %>">
     <% end %>
     <% if current_user %>
       <meta name="current-user" data-user-id="<%= current_user.id %>" data-user-login="<%= current_user.login %>" data-user-name="<%= current_user.name %>" data-user-email="<%= current_user.email %>" data-user-avatar-url="<%= current_user.avatar? ? current_user.avatar.url(:md) : current_user.letter_avatar_url(96) %>">
     <% end %>
-    <%= javascript_packs_with_chunks_tag "application", 'data-turbolinks-track': "reload" %>
-    <%= yield :javascripts %>
   </head>
   <body class="page-<%= controller_name %><%= ' infinite-scroll' if turbolinks_app? %>" data-controller-name="<%= controller_name %>">
-    <%= javascript_pack_tag "bootstrap", 'data-turbolinks-eval': "false" %>
-    <div class="header navbar navbar-expand-md">
-      <div class="container">
+    <div class="flex items-stretch header navbar navbar-expand-md">
+      <div class="container relative z-50 flex flex-wrap items-center px-3 mx-auto xl:px-0 md:flex-nowrap">
         <div class="navbar-header" data-turbolinks-permanent>
           <%= raw Setting.navbar_brand_html %>
         </div>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-navbar">
-          <span class="navbar-toggler-icon"><i class="fa fa-bars"></i></span>
+        <button id="navbar-toggler" class="navbar-toggler" type="button">
+          <span class="flex items-center justify-center"><i class="fa fa-bars"></i></span>
         </button>
-        <div id="main-navbar"  class="collapse navbar-collapse">
+        <div id="main-navbar"  class="items-center flex-1 hidden md:flex grow basis-full md:basis-auto">
           <%= yield :header %>
           <%= render "shared/navbar" %>
         </div>
-        <div class="ml-auto d-flex navbar-right">
-          <form class="navbar-form d-none d-lg-flex mr-2 form-search active" action="/search" method="GET">
+        <div class="navbar-right">
+          <form class="form-search active" action="/search" method="GET">
             <i class="fa btn-search fa-search"></i>
-            <input type="text" name="q" class="form-control" value="<%= params[:q] %>" placeholder="<%= t("common.search") %>"></input>
-        </form>
-        <%= render "shared/usernav" %>
-      </div>
-    </div>
+            <input type="text" name="q" value="<%= params[:q] %>" placeholder="<%= t("common.search") %>"></input>
+          </form>
+          <%= render "shared/usernav" %>
+        </div>
+     </div>
   </div>
   <%= yield :sub_navbar %>
-  <div id="main" class="main-container container">
+  <div id="main" class="container md:px-3">
     <%= render AlertComponent.new %>
     <%= content_for?(:main) ? yield(:main) : yield %>
   </div>
   <% if !mobile? %>
     <footer class="footer" id="footer" data-turbolinks-permanent>
-      <div class="container">
+      <div class="container mx-auto">
         <%= raw Setting.footer_html %>
       </div>
     </footer>
@@ -90,6 +93,9 @@
     <% end %>
     <% if turbolinks_app? %>
       App.turbolinks = true;
+    <% end %>
+    <% if ENV["ACTIONCABLE_DISABLE"].present? %>
+      App.cable = null;
     <% end %>
   </script>
   <%= yield :scripts %>

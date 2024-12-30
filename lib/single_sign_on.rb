@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # From: https://github.com/discourse/discourse/blob/master/lib/single_sign_on.rb
 class SingleSignOn
   ACCESSORS = %i[nonce name username email avatar_url bio external_id return_sso_url admin]
@@ -9,14 +7,6 @@ class SingleSignOn
 
   attr_accessor(*ACCESSORS)
   attr_writer :sso_secret, :sso_url
-
-  def self.sso_secret
-    raise "sso_secret not implemented on class, be sure to set it on instance"
-  end
-
-  def self.sso_url
-    raise "sso_url not implemented on class, be sure to set it on instance"
-  end
 
   def self.parse(payload, sso_secret = nil)
     sso = new

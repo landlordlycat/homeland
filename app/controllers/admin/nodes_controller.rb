@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Admin
   class NodesController < Admin::ApplicationController
     before_action :set_node, only: %i[show edit update destroy]
@@ -22,7 +20,7 @@ module Admin
       @node = Node.new(params[:node].permit!)
 
       if @node.save
-        redirect_to(admin_nodes_path, notice: "Node was successfully created.")
+        redirect_to(admin_nodes_path, notice: t("views.admin.node_was_successfully_created"))
       else
         render action: "new"
       end
@@ -30,7 +28,7 @@ module Admin
 
     def update
       if @node.update(params[:node].permit!)
-        redirect_to(admin_nodes_path, notice: "Node was successfully updated.")
+        redirect_to(admin_nodes_path, notice: t("views.admin.node_update_successfully"))
       else
         render action: "edit"
       end

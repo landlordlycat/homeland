@@ -1,9 +1,4 @@
-# frozen_string_literal: true
-
 class AlertComponent < ApplicationComponent
-  def initialize
-  end
-
   def render?
     !!flash.any?
   end
@@ -13,6 +8,6 @@ class AlertComponent < ApplicationComponent
     type = "alert-success" if type == "notice"
     type = "alert-danger" if type == "alert"
 
-    ["alert alert-dismissible fade show d-flex aic jcsb", type].join(" ")
+    ["alert alert-dismissible fade show flex items-center md:justify-between", type].join(" ")
   end
 end

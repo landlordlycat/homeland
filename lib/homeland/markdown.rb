@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "html/pipeline"
 
 context = {
@@ -31,7 +29,7 @@ module Homeland
       end
 
       def example(locale)
-        File.open(Rails.root.join("lib/homeland/markdown/guides.#{locale}.md")).read
+        File.read(Rails.root.join("lib/homeland/markdown/guides.#{locale}.md"))
       end
     end
   end
